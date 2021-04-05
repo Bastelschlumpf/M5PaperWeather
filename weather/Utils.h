@@ -174,6 +174,12 @@ int WifiGetRssiAsQualityInt(int rssi)
    return quality;
 }
 
+/* The moon phase calculation is part of the github project
+ * https://github.com/G6EJD/ESP32-Revised-Weather-Display-42-E-Paper
+ * See http://www.dsbird.org.uk
+ * Copyright (c) David Bird
+ */
+
 /* Convert a day, month, year to a julian int */
 int JulianDate(int d, int m, int y) 
 {

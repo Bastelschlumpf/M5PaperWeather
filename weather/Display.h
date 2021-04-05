@@ -147,7 +147,11 @@ void WeatherDisplay::DrawSunInfo(int x, int y, int dx, int dy)
    canvas.drawString(getHourMinString(myData.weather.sunset), x + 105, y + 175, 1);
 }
 
-/* Draw the moon phase */
+/* The moon phase drawing was from the github project
+ * https://github.com/G6EJD/ESP32-Revised-Weather-Display-42-E-Paper
+ * See http://www.dsbird.org.uk
+ * Copyright (c) David Bird
+ */
 void WeatherDisplay::DrawMoon(int x, int y, int dd, int mm, int yy)
 {
    const int diameter        = 45;
@@ -205,6 +209,12 @@ void WeatherDisplay::DrawMoonInfo(int x, int y, int dx, int dy)
    DrawMoon(x + dx / 2 - 45, y + 160, date_struct.day, date_struct.mon, date_struct.year);
 }
 
+/* The wind section drawing was from the github project
+ * https://github.com/G6EJD/ESP32-Revised-Weather-Display-42-E-Paper
+ * See http://www.dsbird.org.uk
+ * Copyright (c) David Bird
+ */
+ 
 /* Draw a wind arrow */
 void WeatherDisplay::Arrow(int x, int y, int asize, float aangle, int pwidth, int plength) 
 {
