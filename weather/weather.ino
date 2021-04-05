@@ -34,14 +34,32 @@
 #include "Utils.h"
 #include "Weather.h"
 
+// Refresh the M5Paper info more often.
+// #define REFRESH_PARTLY 1
+
 MyData         myData;            // The collection of the global data
 WeatherDisplay myDisplay(myData); // The global display helper class
 
 /* Start and M5Paper instance */
 void setup()
 {
-   // myData.LoadNVS();
-   // if (myData.nvsCounter == 1) {
+#ifndef REFRESH_PARTLY
+   InitEPD(true);
+   if (StartWiFi(myData.wifiRSSI)) {
+      GetBatteryValues(myData);
+      GetSHT30Values(myData);
+      GetMoonValues(myData);
+      if (myData.weather.Get()) {
+         SetRTCDateTime(myData);
+      }
+      myData.Dump();
+      myDisplay.Show();
+      StopWiFi();
+   }
+   ShutdownEPD(60 * 60); // every 1 hour
+#else 
+   myData.LoadNVS();
+   if (myData.nvsCounter == 1) {
       InitEPD(true);
       if (StartWiFi(myData.wifiRSSI)) {
          GetBatteryValues(myData);
@@ -54,7 +72,6 @@ void setup()
          myDisplay.Show();
          StopWiFi();
       }
-      /*
    } else {
       InitEPD(false);
       GetSHT30Values(myData);
@@ -65,8 +82,8 @@ void setup()
    }
    myData.nvsCounter++;
    myData.SaveNVS();
-   */
-   ShutdownEPD(60);
+   ShutdownEPD(60); // 1 minute
+#endif // REFRESH_PARTLY   
 }
 
 /* Main loop. Never reached because of shutdown */

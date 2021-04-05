@@ -278,11 +278,13 @@ void WeatherDisplay::DrawM5PaperInfo(int x, int y, int dx, int dy)
 
    canvas.setTextSize(3);
    canvas.drawCentreString(getRTCDateString(), x + dx / 2, y + 55, 1);
-   canvas.drawCentreString(getRTCTimeString(), x + dx / 2, y + 100, 1);
+   canvas.drawCentreString(getRTCTimeString(), x + dx / 2, y + 95, 1);
+   canvas.setTextSize(2);
+   canvas.drawCentreString("updated", x + dx / 2, y + 120, 1);
 
+   canvas.setTextSize(3);
    DrawIcon(x + 35, y + 140, (uint16_t *) TEMPERATURE64x64);
    canvas.drawString(String(myData.sht30Temperatur) + " C", x + 35, y + 210, 1);
-   
    DrawIcon(x + 145, y + 140, (uint16_t *) HUMIDITY64x64);
    canvas.drawString(String(myData.sht30Humidity) + "%", x + 150, y + 210, 1);
    
