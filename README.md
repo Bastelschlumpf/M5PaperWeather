@@ -26,3 +26,8 @@
 ### License
    This program is licensed under GPL-3.0
 
+### Thanks
+   * https://www.arduino.cc
+     *Thanks to the Arduino community with all its incredible possibilities and support.** 
+   * Special thanks for the drawing function of the moon and the wind section from David Bird
+     https://github.com/G6EJD/ESP32-Revised-Weather-Display-42-E-Paper

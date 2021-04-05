@@ -209,21 +209,20 @@ void WeatherDisplay::DrawMoonInfo(int x, int y, int dx, int dy)
    DrawMoon(x + dx / 2 - 45, y + 160, date_struct.day, date_struct.mon, date_struct.year);
 }
 
-/* The wind section drawing was from the github project
+/* Draw the in the wind section
+ * The wind section drawing was from the github project
  * https://github.com/G6EJD/ESP32-Revised-Weather-Display-42-E-Paper
  * See http://www.dsbird.org.uk
  * Copyright (c) David Bird
  */
- 
-/* Draw a wind arrow */
 void WeatherDisplay::Arrow(int x, int y, int asize, float aangle, int pwidth, int plength) 
 {
-   float dx = (asize - 10) * cos((aangle - 90) * PI / 180) + x; // calculate X position
-   float dy = (asize - 10) * sin((aangle - 90) * PI / 180) + y; // calculate Y position
-   float x1 = 0;         float y1 = plength;
+   float dx = (asize + 21) * cos((aangle - 90) * PI / 180) + x; // calculate X position
+   float dy = (asize + 21) * sin((aangle - 90) * PI / 180) + y; // calculate Y position
+   float x1 = 0;           float y1 = plength;
    float x2 = pwidth / 2;  float y2 = pwidth / 2;
    float x3 = -pwidth / 2; float y3 = pwidth / 2;
-   float angle = aangle * PI / 180 - 135;
+   float angle = aangle * PI / 180;
    float xx1 = x1 * cos(angle) - y1 * sin(angle) + dx;
    float yy1 = y1 * cos(angle) + x1 * sin(angle) + dy;
    float xx2 = x2 * cos(angle) - y2 * sin(angle) + dx;
@@ -233,7 +232,12 @@ void WeatherDisplay::Arrow(int x, int y, int asize, float aangle, int pwidth, in
    canvas.fillTriangle(xx1, yy1, xx3, yy3, xx2, yy2, M5EPD_Canvas::G15);
 }
 
-/* Draw the wind circle with the windspeed data */
+/* Draw the wind circle with the windspeed data
+ * The wind section drawing was from the github project
+ * https://github.com/G6EJD/ESP32-Revised-Weather-Display-42-E-Paper
+ * See http://www.dsbird.org.uk
+ * Copyright (c) David Bird
+ */
 void WeatherDisplay::DisplayDisplayWindSection(int x, int y, float angle, float windspeed, int cradius) 
 {
    int dxo, dyo, dxi, dyi;
@@ -263,7 +267,7 @@ void WeatherDisplay::DisplayDisplayWindSection(int x, int y, float angle, float 
    canvas.drawCentreString("S", x, y + cradius + 5, 1);
    canvas.drawCentreString("W", x - cradius - 15, y - 3, 1);
    canvas.drawCentreString("E", x + cradius + 15,  y - 3, 1);
-   canvas.drawCentreString(String(windspeed, 1), x, y - 20, 1);
+   canvas.drawCentreString(String(angle), x, y - 20, 1);
    canvas.drawCentreString("m/s", x, y, 1);
 
    Arrow(x, y, cradius - 17, angle, 15, 27);
