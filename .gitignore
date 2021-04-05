@@ -1,0 +1,9 @@
+## OS specific ########
+.DS_Store
+.fuse_hidden*
+
+## Project files ######
+.git
+.vs
+*.user
+tools
