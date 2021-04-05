@@ -267,7 +267,7 @@ void WeatherDisplay::DisplayDisplayWindSection(int x, int y, float angle, float 
    canvas.drawCentreString("S", x, y + cradius + 5, 1);
    canvas.drawCentreString("W", x - cradius - 15, y - 3, 1);
    canvas.drawCentreString("E", x + cradius + 15,  y - 3, 1);
-   canvas.drawCentreString(String(angle), x, y - 20, 1);
+   canvas.drawCentreString(String(windspeed, 1), x, y - 20, 1);
    canvas.drawCentreString("m/s", x, y, 1);
 
    Arrow(x, y, cradius - 17, angle, 15, 27);
