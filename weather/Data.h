@@ -36,8 +36,8 @@ public:
    int     wifiRSSI;         //!< The wifi signal strength
    float   batteryVolt;      //!< The current battery voltage
    int     batteryCapacity;  //!< The current battery capacity
-   int     sht30Temperatur;  //!< SHT30 temperature
-   int     sht30Humidity;    //!< SHT30 humidity
+   int     temperatur;       //!< Temperature
+   int     humidity;         //!< Humidity
 
    time_t  moonRise;         //!< Calculated moon rise
    time_t  moonSet;          //!< Calculated moon set
@@ -49,8 +49,8 @@ public:
       : wifiRSSI(0)
       , batteryVolt(0.0)
       , batteryCapacity(0)
-      , sht30Temperatur(0)
-      , sht30Humidity(0)
+      , temperatur(0)
+      , humidity(0)
       , moonRise(0)
       , moonSet(0)
    {
@@ -66,8 +66,8 @@ public:
       Serial.println("WifiRSSI: "        + String(wifiRSSI));
       Serial.println("BatteryVolt: "     + String(batteryVolt));
       Serial.println("BatteryCapacity: " + String(batteryCapacity));
-      Serial.println("Sht30Temperatur: " + String(sht30Temperatur));
-      Serial.println("Sht30Humidity: "   + String(sht30Humidity));
+      Serial.println("Temperatur: "      + String(temperatur));
+      Serial.println("Humidity: "        + String(humidity));
       Serial.println("MoonRise: "        + getDateTimeString(moonRise));
       Serial.println("MoonSet: "         + getDateTimeString(moonSet));
       

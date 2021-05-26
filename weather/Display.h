@@ -298,9 +298,9 @@ void WeatherDisplay::DrawM5PaperInfo(int x, int y, int dx, int dy)
 
    canvas.setTextSize(3);
    DrawIcon(x + 35, y + 140, (uint16_t *) TEMPERATURE64x64);
-   canvas.drawString(String(myData.sht30Temperatur) + " C", x + 35, y + 210, 1);
+   canvas.drawString(String(myData.temperatur) + " C", x + 35, y + 210, 1);
    DrawIcon(x + 145, y + 140, (uint16_t *) HUMIDITY64x64);
-   canvas.drawString(String(myData.sht30Humidity) + "%", x + 150, y + 210, 1);
+   canvas.drawString(String(myData.humidity) + "%", x + 150, y + 210, 1);
    
 }
 
@@ -432,8 +432,13 @@ void WeatherDisplay::Show()
    }
 
    canvas.drawRect(15, 408, maxX - 30, 122, M5EPD_Canvas::G15);
-   DrawGraph( 15, 408, 232, 122, "Temperature (C)", 0, 7, -20,   30, myData.weather.forecastMaxTemp);
-   DrawGraph( 15, 408, 232, 122, "Temperature (C)", 0, 7, -20,   30, myData.weather.forecastMinTemp);
+   if (myData.weather.forecastMinTemp >= 0 && myData.weather.forecastMaxTemp >= 0) {
+      DrawGraph( 15, 408, 232, 122, "Temperature (C)", 0, 7, 0,   30, myData.weather.forecastMaxTemp);
+      DrawGraph( 15, 408, 232, 122, "Temperature (C)", 0, 7, 0,   30, myData.weather.forecastMinTemp);
+   } else {
+      DrawGraph( 15, 408, 232, 122, "Temperature (C)", 0, 7, -20,   30, myData.weather.forecastMaxTemp);
+      DrawGraph( 15, 408, 232, 122, "Temperature (C)", 0, 7, -20,   30, myData.weather.forecastMinTemp);
+   }
    DrawGraph(247, 408, 232, 122, "Rain (mm)",       0, 7,   0,   myData.weather.maxRain, myData.weather.forecastRain);
    DrawGraph(479, 408, 232, 122, "Humidity (%)",    0, 7,   0,  100, myData.weather.forecastHumidity);
    DrawGraph(711, 408, 232, 122, "Pressure (hPa)",  0, 7, 800, 1400, myData.weather.forecastPressure);

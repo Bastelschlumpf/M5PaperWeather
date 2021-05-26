@@ -34,3 +34,9 @@
 
 #define WIFI_SSID        "your wifi ssid"
 #define WIFI_PW          "your wifi password"
+
+#define IOBROKER_URL     "iobroker url"
+#define IOBROKER_PORT    8087
+
+#define IOBROKER_TEMP   "temperature object"
+#define IOBROKER_HUM    "humidity object"
