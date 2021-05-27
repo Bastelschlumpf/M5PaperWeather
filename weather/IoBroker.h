@@ -56,5 +56,7 @@ bool GetIoBrokerValue(int &value, String topic)
 /* Read all values from the IoBroker api */
 bool GetIoBrokerValues(MyData &myData)
 {
+   myData.temperatur = 0;
+   myData.humidity   = 0;
    return GetIoBrokerValue(myData.temperatur, IOBROKER_TEMP) && GetIoBrokerValue(myData.humidity, IOBROKER_HUM);
 }

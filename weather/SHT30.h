@@ -27,6 +27,8 @@
 /* Read the SHT30 environment chip data */
 bool GetSHT30Values(MyData &myData)
 {
+   myData.temperatur = 0;
+   myData.humidity   = 0;
    M5.SHT30.UpdateData();
    if(M5.SHT30.GetError() == 0) {
       myData.temperatur = (int) M5.SHT30.GetTemperature();
