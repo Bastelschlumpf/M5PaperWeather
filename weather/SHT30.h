@@ -27,7 +27,15 @@ bool GetSHT30Values(MyData &myData)
 {
    M5.SHT30.UpdateData();
    if(M5.SHT30.GetError() == 0) {
-      myData.sht30Temperatur = (int) M5.SHT30.GetTemperature();
+      String weatherUnits = (String)WEATHER_UNITS;
+      
+      if(weatherUnits == "C") {
+         myData.sht30Temperatur = (int) M5.SHT30.GetTemperature();
+      } else if(weatherUnits == "F") {
+         float tempC = (float) M5.SHT30.GetTemperature();
+         int tempF = (int)((tempC * 1.8) + 32);
+         myData.sht30Temperatur = tempF;
+      }
       myData.sht30Humidity   = (int) M5.SHT30.GetRelHumidity();
       return true;
    }

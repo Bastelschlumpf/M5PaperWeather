@@ -37,6 +37,7 @@
 // Refresh the M5Paper info more often.
 // #define REFRESH_PARTLY 1
 
+
 MyData         myData;            // The collection of the global data
 WeatherDisplay myDisplay(myData); // The global display helper class
 

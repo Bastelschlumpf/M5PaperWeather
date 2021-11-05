@@ -298,7 +298,7 @@ void WeatherDisplay::DrawM5PaperInfo(int x, int y, int dx, int dy)
 
    canvas.setTextSize(3);
    DrawIcon(x + 35, y + 140, (uint16_t *) TEMPERATURE64x64);
-   canvas.drawString(String(myData.sht30Temperatur) + " C", x + 35, y + 210, 1);
+   canvas.drawString(String(myData.sht30Temperatur) + " " + (String)WEATHER_UNITS, x + 35, y + 210, 1);
    DrawIcon(x + 145, y + 140, (uint16_t *) HUMIDITY64x64);
    canvas.drawString(String(myData.sht30Humidity) + "%", x + 150, y + 210, 1);
    
@@ -314,7 +314,7 @@ void WeatherDisplay::DrawHourly(int x, int y, int dx, int dy, Weather &weather, 
    
    canvas.setTextSize(2);
    canvas.drawCentreString(getHourString(time) + ":00", x + dx / 2, y + 10, 1);
-   canvas.drawCentreString(String(temp) + " C",         x + dx / 2, y + 30, 1);
+   canvas.drawCentreString(String(temp) + " " + WEATHER_UNITS,         x + dx / 2, y + 30, 1);
    // canvas.drawCentreString(main,                        x + dx / 2, y + 70, 1);
 
    int iconX = x + dx / 2 - 32;
@@ -432,8 +432,8 @@ void WeatherDisplay::Show()
    }
 
    canvas.drawRect(15, 408, maxX - 30, 122, M5EPD_Canvas::G15);
-   DrawGraph( 15, 408, 232, 122, "Temperature (C)", 0, 7, -20,   30, myData.weather.forecastMaxTemp);
-   DrawGraph( 15, 408, 232, 122, "Temperature (C)", 0, 7, -20,   30, myData.weather.forecastMinTemp);
+   DrawGraph( 15, 408, 232, 122, "Temperature (" + (String)WEATHER_UNITS + ")", 0, 7, -20,   30, myData.weather.forecastMaxTemp);
+   DrawGraph( 15, 408, 232, 122, "Temperature (" + (String)WEATHER_UNITS + ")", 0, 7, -20,   30, myData.weather.forecastMinTemp);
    DrawGraph(247, 408, 232, 122, "Rain (mm)",       0, 7,   0,   myData.weather.maxRain, myData.weather.forecastRain);
    DrawGraph(479, 408, 232, 122, "Humidity (%)",    0, 7,   0,  100, myData.weather.forecastHumidity);
    DrawGraph(711, 408, 232, 122, "Pressure (hPa)",  0, 7, 800, 1400, myData.weather.forecastPressure);
