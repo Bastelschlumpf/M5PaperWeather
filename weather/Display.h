@@ -431,9 +431,22 @@ void WeatherDisplay::Show()
       DrawHourly(x, 286, 116, 122, myData.weather, i);
    }
 
+   int min_tempC = -20;
+   int min_tempF = -10;
+   int max_tempC = 37;
+   int max_tempF = 100;
+
+   int min_temp = min_tempC;
+   int max_temp = max_tempC;
+
+   if (WEATHER_UNITS == "F") {
+      min_temp = min_tempF;
+      max_temp = max_tempF;
+   }
+
    canvas.drawRect(15, 408, maxX - 30, 122, M5EPD_Canvas::G15);
-   DrawGraph( 15, 408, 232, 122, "Temperature (" + (String)WEATHER_UNITS + ")", 0, 7, -20,   30, myData.weather.forecastMaxTemp);
-   DrawGraph( 15, 408, 232, 122, "Temperature (" + (String)WEATHER_UNITS + ")", 0, 7, -20,   30, myData.weather.forecastMinTemp);
+   DrawGraph( 15, 408, 232, 122, "Temperature (" + (String)WEATHER_UNITS + ")", 0, 7, min_temp,   max_temp, myData.weather.forecastMaxTemp);
+   DrawGraph( 15, 408, 232, 122, "Temperature (" + (String)WEATHER_UNITS + ")", 0, 7, min_temp,   max_temp, myData.weather.forecastMinTemp);
    DrawGraph(247, 408, 232, 122, "Rain (mm)",       0, 7,   0,   myData.weather.maxRain, myData.weather.forecastRain);
    DrawGraph(479, 408, 232, 122, "Humidity (%)",    0, 7,   0,  100, myData.weather.forecastHumidity);
    DrawGraph(711, 408, 232, 122, "Pressure (hPa)",  0, 7, 800, 1400, myData.weather.forecastPressure);
