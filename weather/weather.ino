@@ -85,7 +85,7 @@ void setup()
    }
    myData.nvsCounter++;
    myData.SaveNVS();
-   ShutdownEPD(60); // 1 minute
+   ShutdownEPD(600); // 10 minute
 #endif // REFRESH_PARTLY   
 }
 
