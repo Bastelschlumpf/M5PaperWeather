@@ -4,7 +4,6 @@
 
    ![M5PaperWeather](images/M5PaperWeather.png "M5Paper")
 
-
 ### Description
   Arduino project to show internal environment data and weather information from 
   openweathermap https://openweathermap.org on the e-ink display of the M5Paper.
@@ -18,6 +17,10 @@
   * The internal SH30 sensor data (temperature and humidity) with the current date and time
   * A hourly forecast with hour, temperature and a weather icon.
   * Some detailt forecast graphs with temperature, rain, humidity and pressure
+
+### Wall mount  
+   See https://www.thingiverse.com/thing:4767014
+   ![Wall mountr](images/WallMount.png "WallMount")
 
 ### Disclaimer
    I don't take any responsibility nor liability for using this software nor for the 
