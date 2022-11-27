@@ -33,9 +33,19 @@ String getRTCDateTimeString()
    M5.RTC.getDate(&date_struct);
    M5.RTC.getTime(&time_struct);
 
-   sprintf(buff,"%02d.%02d.%04d %02d:%02d:%02d",
-      date_struct.day,  date_struct.mon, date_struct.year,
-      time_struct.hour, time_struct.min, time_struct.sec);
+   if (DATE_FORMAT == "MMDDYYYY") {
+       sprintf(buff,"%02d.%02d.%04d %02d:%02d:%02d",
+               date_struct.mon,  date_struct.day, date_struct.year,
+               time_struct.hour, time_struct.min, time_struct.sec);
+   } else if (DATE_FORMAT == "YYYYMMDD") {
+       sprintf(buff,"%04d.%02d.%02d %02d:%02d:%02d",
+               date_struct.year,  date_struct.mon, date_struct.day,
+               time_struct.hour, time_struct.min, time_struct.sec);
+   } else {
+       sprintf(buff,"%02d.%02d.%04d %02d:%02d:%02d",
+               date_struct.day,  date_struct.mon, date_struct.year,
+               time_struct.hour, time_struct.min, time_struct.sec);
+   }
 
    return (String) buff;
 }
@@ -68,8 +78,16 @@ String getRTCDateString()
    
    M5.RTC.getDate(&date_struct);
 
-   sprintf(buff,"%02d.%02d.%04d",
-      date_struct.day,  date_struct.mon, date_struct.year);
+   if(DATE_FORMAT == "MMDDYYYY") {
+      sprintf(buff,"%02d.%02d.%04d",
+              date_struct.mon,  date_struct.day, date_struct.year);
+   } else if (DATE_FORMAT == "YYYYMMDD") {
+      sprintf(buff,"%04d.%02d.%02d",
+              date_struct.year,  date_struct.mon, date_struct.day);
+   } else {
+      sprintf(buff,"%02d.%02d.%04d",
+              date_struct.day,  date_struct.mon, date_struct.year);
+   }
 
    return (String) buff;
 }
@@ -92,10 +110,20 @@ String getRTCTimeString()
 String getDateTimeString(time_t rawtime)
 {
    char buff[32];
-   
+
+   if(DATE_FORMAT == "MMDDYYYY") {
+    sprintf(buff,"%02d.%02d.%04d %02d:%02d:%02d",
+      month(rawtime), day(rawtime), year(rawtime),
+      hour(rawtime), minute(rawtime), second(rawtime));
+   } else if (DATE_FORMAT == "YYYYMMDD") {
+     sprintf(buff,"%04d.%02d.%02d %02d:%02d:%02d",
+      year(rawtime), month(rawtime), day(rawtime),
+      hour(rawtime), minute(rawtime), second(rawtime));
+   } else {
    sprintf(buff,"%02d.%02d.%04d %02d:%02d:%02d",
       day(rawtime), month(rawtime), year(rawtime),
       hour(rawtime), minute(rawtime), second(rawtime));
+   }
 
    return (String) buff;
 }
@@ -104,9 +132,17 @@ String getDateTimeString(time_t rawtime)
 String getDateString(time_t rawtime)
 {
    char buff[32];
-   
-   sprintf(buff,"%02d.%02d.%04d",
+
+   if(DATE_FORMAT == "MMDDYYYY") {
+    sprintf(buff,"%02d.%02d.%04d",
+      month(rawtime), day(rawtime), year(rawtime));
+   } else if(DATE_FORMAT == "YYYYMMDD") {
+    sprintf(buff,"%04d.%02d.%02d",
+      year(rawtime), month(rawtime), day(rawtime));
+   } else {
+    sprintf(buff,"%02d.%02d.%04d",
       day(rawtime), month(rawtime), year(rawtime));
+   }
 
    return (String) buff;
 }
