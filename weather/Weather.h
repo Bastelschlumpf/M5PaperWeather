@@ -69,11 +69,13 @@ protected:
       HTTPClient http;
       String     uri;
       
-      uri += "/data/2.5/onecall";
+      uri += "/data/3.0/onecall";
       uri += "?lat=" + String((float) LATITUDE, 5);
       uri += "&lon=" + String((float) LONGITUDE, 5);
       uri += "&units=metric&lang=en&exclude=minutely";
       uri += "&appid=" + (String) OPENWEATHER_API;
+
+      Serial.printf("GetWeather: http://%s/%s\n", OPENWEATHER_SRV, uri.c_str());
 
       client.stop();
       http.begin(client, OPENWEATHER_SRV, OPENWEATHER_PORT, uri);
