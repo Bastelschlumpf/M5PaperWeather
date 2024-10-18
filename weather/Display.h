@@ -431,8 +431,15 @@ void WeatherDisplay::Show()
       DrawHourly(x, 286, 116, 122, myData.weather, i);
    }
 
+   bool overZero = true;
+   for (int i = 0; i < MAX_FORECAST; i++) {
+      if (myData.weather.forecastMinTemp[i] < 0.0) {
+         overZero = false;
+      }
+   }
+
    canvas.drawRect(15, 408, maxX - 30, 122, M5EPD_Canvas::G15);
-   if (myData.weather.forecastMinTemp >= 0 && myData.weather.forecastMaxTemp >= 0) {
+   if (overZero) {
       DrawGraph( 15, 408, 232, 122, "Temperature (C)", 0, 7, 0,   30, myData.weather.forecastMaxTemp);
       DrawGraph( 15, 408, 232, 122, "Temperature (C)", 0, 7, 0,   30, myData.weather.forecastMinTemp);
    } else {
@@ -442,7 +449,7 @@ void WeatherDisplay::Show()
    DrawGraph(247, 408, 232, 122, "Rain (mm)",       0, 7,   0,   myData.weather.maxRain, myData.weather.forecastRain);
    DrawGraph(479, 408, 232, 122, "Humidity (%)",    0, 7,   0,  100, myData.weather.forecastHumidity);
    DrawGraph(711, 408, 232, 122, "Pressure (hPa)",  0, 7, 800, 1400, myData.weather.forecastPressure);
-   
+    
    canvas.pushCanvas(0, 0, UPDATE_MODE_GC16);
    delay(1000);
 }
