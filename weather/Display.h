@@ -22,8 +22,15 @@
 #pragma once
 #include "Data.h"
 #include "Icons.h"
+#ifdef USE_EPDIY_V7
+#include <epdiy.h>
+#include <epd_highlevel.h>
+#endif
 
-#ifdef USE_M5_UNIFIED
+#ifdef USE_EPDIY_V7
+M5Canvas canvas(&M5.Display); // Using M5Unified canvas for drawing
+#define EPD_COLOR BLACK
+#elif defined(USE_M5_UNIFIED)
 M5Canvas canvas(&M5.Display); // Main canvas of the e-paper
 #define EPD_COLOR BLACK
 #else
@@ -443,7 +450,18 @@ void WeatherDisplay::Show()
    DrawGraph(479, 408, 232, 122, "Humidity (%)",    0, 7,   0,  100, myData.weather.forecastHumidity);
    DrawGraph(711, 408, 232, 122, "Pressure (hPa)",  0, 7, 800, 1400, myData.weather.forecastPressure);
    
-#ifdef USE_M5_UNIFIED
+#if defined(USE_EPDIY_V7)
+   for (int y = 0; y < maxY; ++y) {
+      for (int x = 0; x < maxX; ++x) {
+         uint16_t p = canvas.readPixel(x, y);
+         uint8_t g = 15 - ((p >> 8) & 0xF);
+         epd_draw_pixel(x, y, g, epd_buffer);
+      }
+   }
+   epd_poweron();
+   epd_hl_update_screen(&hl, MODE_GL16, 25);
+   epd_poweroff();
+#elif defined(USE_M5_UNIFIED)
    canvas.pushSprite(0, 0);
 #else
    canvas.pushCanvas(0, 0, UPDATE_MODE_GC16);
@@ -465,7 +483,18 @@ void WeatherDisplay::ShowM5PaperInfo()
    canvas.drawRect(0, 0, 245, 251, EPD_COLOR);
    DrawM5PaperInfo(0, 0, 245, 251);
    
-#ifdef USE_M5_UNIFIED
+#if defined(USE_EPDIY_V7)
+   for (int y = 0; y < canvas.height(); ++y) {
+      for (int x = 0; x < canvas.width(); ++x) {
+         uint16_t p = canvas.readPixel(x, y);
+         uint8_t g = 15 - ((p >> 8) & 0xF);
+         epd_draw_pixel(697 + x, 35 + y, g, epd_buffer);
+      }
+   }
+   epd_poweron();
+   epd_hl_update_screen(&hl, MODE_GL16, 25);
+   epd_poweroff();
+#elif defined(USE_M5_UNIFIED)
    canvas.pushSprite(697, 35);
 #else
    canvas.pushCanvas(697, 35, UPDATE_MODE_GC16);
