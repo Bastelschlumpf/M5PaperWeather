@@ -20,7 +20,15 @@
   * Main file with setup() and loop()
   */
   
+#ifdef USE_EPDIY_V7
+#include <M5Unified.h>
+#include <epdiy.h>
+#include <epd_highlevel.h>
+#elif defined(USE_M5_UNIFIED)
+#include <M5Unified.h>
+#else
 #include <M5EPD.h>
+#endif
 #include "Config.h"
 #include "ConfigOverride.h" // Remove this line
 #include "Data.h"
@@ -39,6 +47,10 @@
 
 MyData         myData;            // The collection of the global data
 WeatherDisplay myDisplay(myData); // The global display helper class
+#ifdef USE_EPDIY_V7
+EpdiyHighlevelState hl;
+uint8_t* epd_buffer = nullptr;
+#endif
 
 /* Start and M5Paper instance */
 void setup()

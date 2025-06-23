@@ -5,8 +5,16 @@
    ![M5PaperWeather](images/M5PaperWeather.png "M5Paper")
 
 ### Description
-  Arduino project to show internal environment data and weather information from 
-  openweathermap https://openweathermap.org on the e-ink display of the M5Paper.  
+  Arduino project to show internal environment data and weather information from
+  openweathermap https://openweathermap.org on the e-ink display of the M5Paper.
+  The project also supports the **M5Paper S3** when compiled with the
+  [M5Unified](https://github.com/m5stack/M5Unified) library. Define
+  `USE_M5_UNIFIED` during compilation when using the S3 board and select
+  the **M5Stack Paper S3** board in the Arduino IDE.
+  Alternatively you can build the sketch with the
+  [EPDiy](https://github.com/vroland/epdiy) driver for **board v7** by
+  defining `USE_EPDIY_V7`. This will bypass the M5Stack display driver
+  and use EPDiy directly.
   Please edit the config.h file with your own data.  
   You need an api key from openweathermap.  
   As of the new API version 3.x.x, an account with a credit card on file is mandatory, but 1000 requests per day are free.  
