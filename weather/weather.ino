@@ -20,7 +20,11 @@
   * Main file with setup() and loop()
   */
   
+#ifdef USE_M5_UNIFIED
+#include <M5Unified.h>
+#else
 #include <M5EPD.h>
+#endif
 #include "Config.h"
 #include "ConfigOverride.h" // Remove this line
 #include "Data.h"

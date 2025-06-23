@@ -25,6 +25,10 @@
 /* Read the SHT30 environment chip data */
 bool GetSHT30Values(MyData &myData)
 {
+#ifdef USE_M5_UNIFIED
+   // S3 version may not provide SHT30 support via M5Unified
+   return false;
+#else
    M5.SHT30.UpdateData();
    if(M5.SHT30.GetError() == 0) {
       myData.sht30Temperatur = (int) M5.SHT30.GetTemperature();
@@ -32,4 +36,5 @@ bool GetSHT30Values(MyData &myData)
       return true;
    }
    return false;
+#endif
 }

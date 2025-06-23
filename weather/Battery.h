@@ -28,7 +28,11 @@
   */
 bool GetBatteryValues(MyData &myData)
 {
+#ifdef USE_M5_UNIFIED
+   uint32_t vol = M5.Power.getBatteryVoltage();
+#else
    uint32_t vol = M5.getBatteryVoltage();
+#endif
 
    if (vol < 3300) {
       vol = 3300;

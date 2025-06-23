@@ -21,12 +21,32 @@
   */
 #pragma once
 
+#ifdef USE_M5_UNIFIED
+/* Initialize the M5Paper */
+void InitEPD(bool clearDisplay = true)
+{
+   auto cfg = M5.config();
+   cfg.clear_display = clearDisplay;
+   M5.begin(cfg);
+
+   M5.Display.setRotation(0);
+   M5.Touch.setRotation(0);
+}
+
+void ShutdownEPD(int sec)
+{
+   Serial.println("Shutdown");
+   M5.Display.sleep();
+   M5.Display.waitDisplay();
+   M5.Power.timerSleep(sec);
+}
+#else
 /* Initialize the M5Paper */
 void InitEPD(bool clearDisplay = true)
 {
    M5.begin(false, false, true, true, false);
    M5.RTC.begin();
-   
+
    M5.EPD.SetRotation(0);
    M5.TP.SetRotation(0);
    if (clearDisplay) {
@@ -53,3 +73,4 @@ void ShutdownEPD(int sec)
 */   
    M5.shutdown(sec);
 }
+#endif

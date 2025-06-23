@@ -23,8 +23,13 @@
 #include "Data.h"
 #include "Icons.h"
 
-
+#ifdef USE_M5_UNIFIED
+M5Canvas canvas(&M5.Display); // Main canvas of the e-paper
+#define EPD_COLOR BLACK
+#else
 M5EPD_Canvas canvas(&M5.EPD); // Main canvas of the e-paper
+#define EPD_COLOR M5EPD_Canvas::G15
+#endif
 
 /* Main class for drawing the content to the e-paper display. */
 class WeatherDisplay
@@ -85,20 +90,20 @@ void WeatherDisplay::DrawRSSI(int x, int y)
 {
    int iQuality = WifiGetRssiAsQualityInt(myData.wifiRSSI);
 
-   if (iQuality >= 80) DrawCircle(x + 12, y, 16, M5EPD_Canvas::G15, 225, 315); 
-   if (iQuality >= 40) DrawCircle(x + 12, y, 12, M5EPD_Canvas::G15, 225, 315); 
-   if (iQuality >= 20) DrawCircle(x + 12, y,  8, M5EPD_Canvas::G15, 225, 315); 
-   if (iQuality >= 10) DrawCircle(x + 12, y,  4, M5EPD_Canvas::G15, 225, 315); 
-   DrawCircle(x + 12, y, 2, M5EPD_Canvas::G15, 225, 315); 
+   if (iQuality >= 80) DrawCircle(x + 12, y, 16, EPD_COLOR, 225, 315); 
+   if (iQuality >= 40) DrawCircle(x + 12, y, 12, EPD_COLOR, 225, 315); 
+   if (iQuality >= 20) DrawCircle(x + 12, y,  8, EPD_COLOR, 225, 315); 
+   if (iQuality >= 10) DrawCircle(x + 12, y,  4, EPD_COLOR, 225, 315); 
+   DrawCircle(x + 12, y, 2, EPD_COLOR, 225, 315); 
 }
 
 /* Draw a the battery icon */
 void WeatherDisplay::DrawBattery(int x, int y)
 {
-   canvas.drawRect(x, y, 40, 16, M5EPD_Canvas::G15);
-   canvas.drawRect(x + 40, y + 3, 4, 10, M5EPD_Canvas::G15);
+   canvas.drawRect(x, y, 40, 16, EPD_COLOR);
+   canvas.drawRect(x + 40, y + 3, 4, 10, EPD_COLOR);
    for (int i = x; i < x + 40; i++) {
-      canvas.drawLine(i, y, i, y + 15, M5EPD_Canvas::G15);
+      canvas.drawLine(i, y, i, y + 15, EPD_COLOR);
       if ((i - x) * 100.0 / 40.0 > myData.batteryCapacity) {
          break;
       }
@@ -124,7 +129,7 @@ void WeatherDisplay::DrawIcon(int x, int y, const uint16_t *icon, int dx /*= 64*
          uint16_t pixel = icon[yi * dx + xi];
 
          if (highContrast) {
-            if (15 - (pixel / 4096) > 0) canvas.drawPixel(x + xi, y + yi, M5EPD_Canvas::G15);
+            if (15 - (pixel / 4096) > 0) canvas.drawPixel(x + xi, y + yi, EPD_COLOR);
          } else {
             canvas.drawPixel(x + xi, y + yi, 15 - (pixel / 4096));
          }
@@ -137,7 +142,7 @@ void WeatherDisplay::DrawSunInfo(int x, int y, int dx, int dy)
 {
    canvas.setTextSize(3);
    canvas.drawCentreString("Sun", x + dx / 2, y + 7, 1);
-   canvas.drawLine(x, y + 35, x + dx, y + 35, M5EPD_Canvas::G15);
+   canvas.drawLine(x, y + 35, x + dx, y + 35, EPD_COLOR);
 
    canvas.setTextSize(3);
    DrawIcon(x + 25, y + 55, (uint16_t *) SUNRISE64x64);
@@ -158,7 +163,7 @@ void WeatherDisplay::DrawMoon(int x, int y, int dd, int mm, int yy)
    const int number_of_lines = 90;
    double    Phase           = NormalizedMoonPhase(dd, mm, yy);
    
-   canvas.drawCircle(x + diameter - 1, y + diameter, diameter / 2 + 1, M5EPD_Canvas::G15);
+   canvas.drawCircle(x + diameter - 1, y + diameter, diameter / 2 + 1, EPD_COLOR);
    
    for (double Ypos = 0; Ypos <= number_of_lines / 2; Ypos++) {
       double Xpos = sqrt(number_of_lines / 2 * number_of_lines / 2 - Ypos * Ypos);
@@ -182,10 +187,10 @@ void WeatherDisplay::DrawMoon(int x, int y, int dd, int mm, int yy)
       double pW4x = (Xpos2 + number_of_lines) / number_of_lines * diameter + x;
       double pW4y = (Ypos + number_of_lines)  / number_of_lines * diameter + y;
       
-      canvas.drawLine(pW1x, pW1y, pW2x, pW2y, M5EPD_Canvas::G15);
-      canvas.drawLine(pW3x, pW3y, pW4x, pW4y, M5EPD_Canvas::G15);
+      canvas.drawLine(pW1x, pW1y, pW2x, pW2y, EPD_COLOR);
+      canvas.drawLine(pW3x, pW3y, pW4x, pW4y, EPD_COLOR);
    }
-   canvas.drawCircle(x + diameter - 1, y + diameter, diameter / 2, M5EPD_Canvas::G15);
+   canvas.drawCircle(x + diameter - 1, y + diameter, diameter / 2, EPD_COLOR);
 }
 
 /* Draw the moon information with moonrise, moonset and moon phase */
@@ -197,7 +202,7 @@ void WeatherDisplay::DrawMoonInfo(int x, int y, int dx, int dy)
    
    canvas.setTextSize(3);
    canvas.drawCentreString("Moon", x + dx / 2, y + 7, 1);
-   canvas.drawLine(x, y + 35, x + dx, y + 35, M5EPD_Canvas::G15);
+   canvas.drawLine(x, y + 35, x + dx, y + 35, EPD_COLOR);
 
    canvas.setTextSize(3);
    DrawIcon(x + 30, y + 40, (uint16_t *) MOONRISE64x64);
@@ -229,7 +234,7 @@ void WeatherDisplay::Arrow(int x, int y, int asize, float aangle, int pwidth, in
    float yy2 = y2 * cos(angle) + x2 * sin(angle) + dy;
    float xx3 = x3 * cos(angle) - y3 * sin(angle) + dx;
    float yy3 = y3 * cos(angle) + x3 * sin(angle) + dy;
-   canvas.fillTriangle(xx1, yy1, xx3, yy3, xx2, yy2, M5EPD_Canvas::G15);
+   canvas.fillTriangle(xx1, yy1, xx3, yy3, xx2, yy2, EPD_COLOR);
 }
 
 /* Draw the wind circle with the windspeed data
@@ -243,10 +248,10 @@ void WeatherDisplay::DisplayDisplayWindSection(int x, int y, float angle, float 
    int dxo, dyo, dxi, dyi;
 
    canvas.setTextSize(2);
-   canvas.drawLine(0, 15, 0, y + cradius + 30, M5EPD_Canvas::G15);
-   canvas.drawCircle(x, y, cradius, M5EPD_Canvas::G15);     // Draw compass circle
-   canvas.drawCircle(x, y, cradius + 1, M5EPD_Canvas::G15); // Draw compass circle
-   canvas.drawCircle(x, y, cradius * 0.7, M5EPD_Canvas::G15); // Draw compass inner circle
+   canvas.drawLine(0, 15, 0, y + cradius + 30, EPD_COLOR);
+   canvas.drawCircle(x, y, cradius, EPD_COLOR);     // Draw compass circle
+   canvas.drawCircle(x, y, cradius + 1, EPD_COLOR); // Draw compass circle
+   canvas.drawCircle(x, y, cradius * 0.7, EPD_COLOR); // Draw compass inner circle
    for (float a = 0; a < 360; a = a + 22.5) {
       dxo = cradius * cos((a - 90) * PI / 180);
       dyo = cradius * sin((a - 90) * PI / 180);
@@ -256,12 +261,12 @@ void WeatherDisplay::DisplayDisplayWindSection(int x, int y, float angle, float 
       if (a == 315) canvas.drawCentreString("NW", dxo + x - 15, dyo + y - 15, 1);
       dxi = dxo * 0.9;
       dyi = dyo * 0.9;
-      canvas.drawLine(dxo + x, dyo + y, dxi + x, dyi + y, M5EPD_Canvas::G15);
+      canvas.drawLine(dxo + x, dyo + y, dxi + x, dyi + y, EPD_COLOR);
       dxo = dxo * 0.7;
       dyo = dyo * 0.7;
       dxi = dxo * 0.9;
       dyi = dyo * 0.9;
-      canvas.drawLine(dxo + x, dyo + y, dxi + x, dyi + y, M5EPD_Canvas::G15);
+      canvas.drawLine(dxo + x, dyo + y, dxi + x, dyi + y, EPD_COLOR);
    }
    canvas.drawCentreString("N", x, y - cradius - 20, 1);
    canvas.drawCentreString("S", x, y + cradius + 5, 1);
@@ -278,7 +283,7 @@ void WeatherDisplay::DrawWindInfo(int x, int y, int dx, int dy)
 {
    canvas.setTextSize(3);
    canvas.drawCentreString("Wind", x + dx / 2, y + 7, 1);
-   canvas.drawLine(x, y + 35, x + dx, y + 35, M5EPD_Canvas::G15);
+   canvas.drawLine(x, y + 35, x + dx, y + 35, EPD_COLOR);
 
    DisplayDisplayWindSection(x + dx / 2, y + dy / 2 + 20, myData.weather.winddir, myData.weather.windspeed, 75);
 }
@@ -288,7 +293,7 @@ void WeatherDisplay::DrawM5PaperInfo(int x, int y, int dx, int dy)
 {
    canvas.setTextSize(3);
    canvas.drawCentreString("M5Paper", x + dx / 2, y + 7, 1);
-   canvas.drawLine(x, y + 35, x + dx, y + 35, M5EPD_Canvas::G15);
+   canvas.drawLine(x, y + 35, x + dx, y + 35, EPD_COLOR);
 
    canvas.setTextSize(3);
    canvas.drawCentreString(getRTCDateString(), x + dx / 2, y + 55, 1);
@@ -367,7 +372,7 @@ void WeatherDisplay::DrawGraph(int x, int y, int dx, int dy, String title, int x
       canvas.drawString(String(i), graphX + i * xStep, graphY + graphDY + 5);   
    }
    
-   canvas.drawRect(graphX, graphY, graphDX, graphDY, M5EPD_Canvas::G15);   
+   canvas.drawRect(graphX, graphY, graphDX, graphDY, EPD_COLOR);   
    if (yMin < 0 && yMax > 0) { // null line?
       float yValueDX = (float) graphDY / (yMax - yMin);
       int   yPos     = graphY + graphDY - (0.0 - yMin) * yValueDX;
@@ -377,7 +382,7 @@ void WeatherDisplay::DrawGraph(int x, int y, int dx, int dy, String title, int x
 
       canvas.drawString("0", graphX - 20, yPos);   
       for (int xDash = graphX; xDash < graphX + graphDX - 10; xDash += 10) {
-         canvas.drawLine(xDash, yPos, xDash + 5, yPos, M5EPD_Canvas::G15);         
+         canvas.drawLine(xDash, yPos, xDash + 5, yPos, EPD_COLOR);         
       }
    }
    for (int i = xMin; i <= xMax; i++) {
@@ -389,9 +394,9 @@ void WeatherDisplay::DrawGraph(int x, int y, int dx, int dy, String title, int x
       if (yPos > graphY + graphDY) yPos = graphY + graphDY;
       if (yPos < graphY)           yPos = graphY;
 
-      canvas.fillCircle(xPos, yPos, 2, M5EPD_Canvas::G15);
+      canvas.fillCircle(xPos, yPos, 2, EPD_COLOR);
       if (i > xMin) {
-         canvas.drawLine(iOldX, iOldY, xPos, yPos, M5EPD_Canvas::G15);         
+         canvas.drawLine(iOldX, iOldY, xPos, yPos, EPD_COLOR);         
       }
       iOldX = xPos;
       iOldY = yPos;
@@ -414,31 +419,35 @@ void WeatherDisplay::Show()
    // x = 960 y = 540
    // 540 - oben 35 - unten 10 = 495
    
-   canvas.drawRect(14, 34, maxX - 28, maxY - 43, M5EPD_Canvas::G15);
+   canvas.drawRect(14, 34, maxX - 28, maxY - 43, EPD_COLOR);
    
-   canvas.drawRect(15, 35, maxX - 30, 251, M5EPD_Canvas::G15);
-   canvas.drawLine(232, 35, 232, 286, M5EPD_Canvas::G15);
-   canvas.drawLine(465, 35, 465, 286, M5EPD_Canvas::G15);
-   canvas.drawLine(697, 35, 697, 286, M5EPD_Canvas::G15);
+   canvas.drawRect(15, 35, maxX - 30, 251, EPD_COLOR);
+   canvas.drawLine(232, 35, 232, 286, EPD_COLOR);
+   canvas.drawLine(465, 35, 465, 286, EPD_COLOR);
+   canvas.drawLine(697, 35, 697, 286, EPD_COLOR);
    DrawSunInfo    ( 15, 35, 232, 251);
    DrawMoonInfo   (232, 35, 232, 251);
    DrawWindInfo   (465, 35, 232, 251);
    DrawM5PaperInfo(697, 35, 245, 251);
 
-   canvas.drawRect(15, 286, maxX - 30, 122, M5EPD_Canvas::G15);
+   canvas.drawRect(15, 286, maxX - 30, 122, EPD_COLOR);
    for (int x = 15, i = 0; x <= 930; x += 116, i += 3) {
-      canvas.drawLine(x, 286, x, 408, M5EPD_Canvas::G15);
+      canvas.drawLine(x, 286, x, 408, EPD_COLOR);
       DrawHourly(x, 286, 116, 122, myData.weather, i);
    }
 
-   canvas.drawRect(15, 408, maxX - 30, 122, M5EPD_Canvas::G15);
+   canvas.drawRect(15, 408, maxX - 30, 122, EPD_COLOR);
    DrawGraph( 15, 408, 232, 122, "Temperature (C)", 0, 7, -20,   30, myData.weather.forecastMaxTemp);
    DrawGraph( 15, 408, 232, 122, "Temperature (C)", 0, 7, -20,   30, myData.weather.forecastMinTemp);
    DrawGraph(247, 408, 232, 122, "Rain (mm)",       0, 7,   0,   myData.weather.maxRain, myData.weather.forecastRain);
    DrawGraph(479, 408, 232, 122, "Humidity (%)",    0, 7,   0,  100, myData.weather.forecastHumidity);
    DrawGraph(711, 408, 232, 122, "Pressure (hPa)",  0, 7, 800, 1400, myData.weather.forecastPressure);
    
+#ifdef USE_M5_UNIFIED
+   canvas.pushSprite(0, 0);
+#else
    canvas.pushCanvas(0, 0, UPDATE_MODE_GC16);
+#endif
    delay(1000);
 }
 
@@ -453,9 +462,13 @@ void WeatherDisplay::ShowM5PaperInfo()
    canvas.setTextColor(WHITE, BLACK);
    canvas.setTextDatum(TL_DATUM);
 
-   canvas.drawRect(0, 0, 245, 251, M5EPD_Canvas::G15);
+   canvas.drawRect(0, 0, 245, 251, EPD_COLOR);
    DrawM5PaperInfo(0, 0, 245, 251);
    
+#ifdef USE_M5_UNIFIED
+   canvas.pushSprite(697, 35);
+#else
    canvas.pushCanvas(697, 35, UPDATE_MODE_GC16);
+#endif
    delay(1000);
 }
